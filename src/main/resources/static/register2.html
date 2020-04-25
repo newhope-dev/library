@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <title>登录页面</title>
+</head>
+<body>
+<h3>登录</h3>
+<form >
+ 用户名：<input type="text" name="username"/><br>
+ 密码：<input type="password" name="password"/><br>
+ <input type="button" value="注册" onclick="updateType()"/>
+</form>
+</body>
+<script src="./jquery-1.11.3.js"></script>
+<script>
+
+
+ function updateType() {
+  $.ajax({
+   url: "/library/hello" ,
+   type: "get",
+   // contentType: "application/json",
+   dataType: 'json',
+   cache: false,
+   async: true,
+   beforeSend: function (XMLHttpRequest) {
+    console.log(localStorage.token)
+    XMLHttpRequest.setRequestHeader("token", localStorage.token);
+   },
+   success: function (result) {
+    location.href="http://localhost:8081/library/hello.html"
+    console.log(result)
+
+    }
+
+  });
+ }
+
+</script>
+</html>

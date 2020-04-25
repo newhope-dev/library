@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+ <form enctype="multipart/form-data"  method="post" action="image">
+     <input type="file" value="上传头像" name="uploadfile">
+     <input type="submit" value="shang">
+ </form>
+<div>
+    <img src="" it="img" class="c">
+</div>
+</body>
+<style>
+
+    .c{
+        width: 200px;
+        height: 200px;
+        background-color:red;
+    }
+</style>
+<script src="./jquery-1.11.3.js"></script>
+<script>
+  function f() {
+      var data = new FormData($('#test')[0])
+      console.log(data)
+      $.ajax({
+          url:"/library/image",
+          data:data,
+          dataType:'json',
+          type:'post',
+          cache: false,
+          processData: false,
+          contentType: false,
+          success:function (res) {
+              console.log(res.result)
+              $("#img").attr("src",res.result);
+
+          }
+
+      })
+  }
+
+</script>
+</html>
