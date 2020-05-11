@@ -1,5 +1,6 @@
 package library.library;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import library.library.entity.Book;
 import library.library.mapper.BookMapper;
 import library.library.mapper.UserMapper;
@@ -22,13 +23,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 class LibraryApplicationTests {
 
 	@Resource
 	UserService userService;
+	@Resource
+	BookService bookService;
 	@Resource
 	BookMapper bookMapper;
 	private Cell cell6;
@@ -44,16 +49,18 @@ class LibraryApplicationTests {
 	}
 	@Test
 	public void context(){
-		BookService bookService= (BookService)SpringContextUtils.getBean("bookServiceImpl");
-
-		System.out.println(bookService.list());
+		QueryWrapper<Book> queryWrapper=new QueryWrapper<>();
+		queryWrapper.eq("book_name","算法导");
+		List<Book> list= bookService.list(queryWrapper);
+		list.stream().filter(a->a.getBookName().equals("算法导")).collect(Collectors.toList());
+		System.out.println(list);
 	}
-	@Test
-	public void Json(){
-		String str="";
-		JSONObject jsonObject=JSONObject.fromObject(str);
-		System.out.println(jsonObject.toString());
-	}
+//	@Test
+//	public void Json(){
+//		String str="";
+//		JSONObject jsonObject=JSONObject.fromObject(str);
+//		System.out.println(jsonObject.toString());
+//	}
 
 	@Test
 	public void s(){
@@ -85,18 +92,18 @@ class LibraryApplicationTests {
 		cell6.setCellValue("出版社");
 		cell7.setCellValue("摘要");
 		cell8.setCellValue("收藏");
-		for(int i=0;i<list.size();i++){
-			row=sheet1.createRow(i+1);
-			Book book=list.get(i);
-			Cell xuhao=row.createCell(0);
+		for(int i=0;i<list.size();i++) {
+			row = sheet1.createRow(i + 1);
+			Book book = list.get(i);
+			Cell xuhao = row.createCell(0);
 			xuhao.setCellValue(book.getId());
-			Cell no=row.createCell(1);
+			Cell no = row.createCell(1);
 			no.setCellValue(book.getBookNo());
-			Cell name=row.createCell(2);
+			Cell name = row.createCell(2);
 			name.setCellValue(book.getBookName());
-			Cell author=row.createCell(3);
+			Cell author = row.createCell(3);
 			author.setCellValue(book.getAuthor());
-			Cell type=row.createCell(4);
+			Cell type = row.createCell(4);
 			type.setCellValue(book.getType());
 			System.out.println(type.getRichStringCellValue().toString());
 			System.out.println(author.getRichStringCellValue().toString());

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -26,6 +27,7 @@ public class BookController {
         QueryWrapper<Book> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("book_name","算法导论");
        List<Book> list= bookService.list(queryWrapper);
+       list.stream().filter(a->a.getBookName().equals("算法导论")).collect(Collectors.toList());
        return Result.ok(list);
     }
 

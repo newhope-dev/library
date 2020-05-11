@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class TestController {
@@ -60,21 +61,38 @@ public class TestController {
 
     }
     @RequestMapping("/image")
-    public Result importexcel(HttpServletRequest request,@RequestParam("uploadfile") MultipartFile multipartFile){
+    public Result importexcel(HttpServletRequest request,@RequestParam("uploadfile") MultipartFile file){
         Result result=new Result();
-        String filename=multipartFile.getOriginalFilename();
-        System.out.println(filename);
-        String filepath=request.getSession().getServletContext().getRealPath("/")+multipartFile.getOriginalFilename();
-        System.out.println(filepath);
-        try {
-            multipartFile.transferTo(new File(filepath));
-            result.setResult(filepath);
-            return  result;
-        } catch (IOException e) {
-            e.printStackTrace();
+        System.out.println("是否运行");
+        //检查文件是否为空
+        if(file.isEmpty()){
+            result.setMessage("文件为空");
+            return result;
         }
+       //确定文件夹
+        String parentPath=request.getServletContext().getRealPath("upload");
+        File parent=new File(parentPath);
+        if(!parent.exists()){
+            parent.mkdirs();
+        }
+        //确定文件名
+        String filename= UUID.randomUUID().toString();
+        String originalFilename=file.getOriginalFilename();
+        int beginIndex=originalFilename.lastIndexOf(".");
+        String suffix=originalFilename.substring(beginIndex);
+        String child=filename+suffix;
+        //保存用户上传的文件
+        File dest=new File(parent,child);
+        System.out.println(dest);
+        try{
+            file.transferTo(dest);
+        }catch (Exception e){
 
-        return null;
+        }
+        String avatarPath="/upload/"+child;
+        result.setResult(avatarPath);
+
+        return result;
     }
 
 }
